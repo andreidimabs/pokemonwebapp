@@ -1,7 +1,7 @@
 import React from "react";
+import Axios from "axios";
 
-const Stats = (props) => {
-  const { chosen, pokemonStats } = props;
+const Stats = ({ chosen, pokemonStats }) => {
   return (
     <div className="right">
       {" "}

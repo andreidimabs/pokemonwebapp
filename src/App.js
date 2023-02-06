@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom";
-import Stats from "./stats";
-import Axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Routes, Route, BrowserRouter } from "react-router-dom";
+import Stats from "./pages/stats";
+import Index from "./pages/index";
 import "./App.css";
+import Axios from "axios";
 
-function App() {
+const App = (props) => {
   const [nameList, setNameList] = useState([]);
   const [search, setSearch] = useState("");
   const [chosen, setChosen] = useState(false);
@@ -34,6 +35,7 @@ function App() {
       }
     );
   }, []);
+
   const searchPokemon = (item) => {
     Axios.get(`https://pokeapi.co/api/v2/pokemon/${item.name}`).then(
       (response) => {
@@ -50,63 +52,30 @@ function App() {
       }
     );
   };
-
-  const navigate = useNavigate();
-  const navStats = (item) => {
-    searchPokemon(item);
-    navigate("./stats");
-  };
   return (
-    <div className="App">
-      <div className="header">
-        <h1>Pokemon Stats</h1>
-        <h4>Search for Pokemon Name Here</h4>
-        <input
-          type="text"
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
-        />
-      </div>
-      <div className="content">
-        <div className="left">
-          {nameList
-            .filter((item) => {
-              if (search === "") {
-                return item;
-              } else if (
-                item.name.toLowerCase().includes(search.toLowerCase())
-              ) {
-                return item;
-              }
-            })
-            .map((item) => {
-              return (
-                <div className="nameContainer" key={item.name}>
-                  <button
-                    onClick={() => {
-                      navStats(item);
-                    }}
-                  >
-                    <img src={item.img} />
-                    <p>
-                      {item.name.charAt(0).toUpperCase() +
-                        item.name.slice(1).toLowerCase()}
-                    </p>
-                  </button>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-      <Routes>
-        <Route
-          path="./stats"
-          element={<Stats chosen={chosen} pokemonStats={pokemonStats} />}
-        />
-      </Routes>
-    </div>
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={
+          <Index
+            {...props}
+            search={search}
+            setSearch={setSearch}
+            nameList={nameList}
+            searchPokemon={searchPokemon}
+          />
+        }
+      />
+      <Route
+        exact
+        path={"/stats/:id"}
+        element={
+          <Stats {...props} chosen={chosen} pokemonStats={pokemonStats} />
+        }
+      />
+    </Routes>
   );
-}
+};
 
 export default App;
