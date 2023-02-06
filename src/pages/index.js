@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import Axios from "axios";
 
 const Index = ({ setSearch, nameList, search, searchPokemon }) => {
   return (
